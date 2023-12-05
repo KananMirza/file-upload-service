@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class FileServiceImpl  implements FileService {
     private static final String ALLOWED_FILE_EXTENSIONS_PATTERN = "jpeg,jpg,png,webm,jfif";
 
     @Override
-    public String uploadFile(FileRequestDto fileRequestDto) throws Exception{
+    public FileResponseDto uploadFile(FileRequestDto fileRequestDto) throws Exception{
         if (!isFileExtensionAllowed(fileRequestDto.getFileType())) {
             throw new Exception("FileType not supported!");
         }
@@ -34,7 +33,11 @@ public class FileServiceImpl  implements FileService {
         Files.write(filePath,fileBytes);
         file.setFilePath(filePath.toString());
         fileRepository.save(file);
-        return "File has been successfully";
+        FileResponseDto response = new FileResponseDto();
+        response.setId(file.getId());
+        response.setFilePath(file.getFilePath());
+        response.setKey(file.getKey());
+        return response;
     }
     @Override
     public FileResponseDto downloadFile(String key)throws Exception{
@@ -45,6 +48,7 @@ public class FileServiceImpl  implements FileService {
         FileResponseDto response = new FileResponseDto();
         response.setId(file.getId());
         response.setFilePath(file.getFilePath());
+        response.setKey(file.getKey());
         return response;
     }
 

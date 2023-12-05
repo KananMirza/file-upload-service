@@ -19,18 +19,18 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<ResponseApi> uploadFile(@RequestBody @Valid FileRequestDto fileRequestDto) throws Exception {
-        String message = fileService.uploadFile(fileRequestDto);
-        return ResponseEntity.ok(resp(message,null));
+        FileResponseDto response = fileService.uploadFile(fileRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED.value()).body(resp(HttpStatus.CREATED.value(),response ));
     }
 
     @GetMapping("/download/{key}")
     public ResponseEntity<ResponseApi> downloadFile(@PathVariable @Valid @NotNull(message = "Key is required") String key) throws Exception {
-        return ResponseEntity.ok(resp("Success",fileService.downloadFile(key)));
+        return ResponseEntity.ok(resp(HttpStatus.OK.value(), fileService.downloadFile(key)));
     }
-    private ResponseApi resp(String message, FileResponseDto response){
+    private ResponseApi resp(Integer status, Object response){
         ResponseApi responseApi = new ResponseApi();
-        responseApi.setStatus(HttpStatus.OK.value());
-        responseApi.setMessage(message);
+        responseApi.setStatus(status);
+        responseApi.setMessage("Success");
         responseApi.setBody(response);
         return responseApi;
     }
