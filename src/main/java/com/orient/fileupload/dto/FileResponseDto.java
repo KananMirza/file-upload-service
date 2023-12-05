@@ -9,4 +9,5 @@ import lombok.experimental.FieldDefaults;
 public class FileResponseDto {
     Long id;
     String filePath;
+    String key;
 }
