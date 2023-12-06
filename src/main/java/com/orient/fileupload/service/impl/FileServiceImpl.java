@@ -1,5 +1,6 @@
 package com.orient.fileupload.service.impl;
 
+import com.orient.fileupload.config.ConfigReader;
 import com.orient.fileupload.dto.FileRequestDto;
 import com.orient.fileupload.dto.FileResponseDto;
 import com.orient.fileupload.entity.File;
@@ -17,7 +18,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class FileServiceImpl  implements FileService {
     private final FileRepository fileRepository;
-    private final static String PATH = "C:\\Users\\kenan\\OneDrive\\Desktop\\e-library\\files/";
+    private final ConfigReader configReader;
     private static final String ALLOWED_FILE_EXTENSIONS_PATTERN = "jpeg,jpg,png,webm,jfif";
 
     @Override
@@ -29,7 +30,7 @@ public class FileServiceImpl  implements FileService {
         file.setFileType(fileRequestDto.getFileType());
         byte[] fileBytes = Base64.getDecoder().decode(fileRequestDto.getFileBase64());
         String fileName = fileRequestDto.getFileName();
-        Path filePath = Path.of(PATH + fileName + "." + fileRequestDto.getFileType());
+        Path filePath = Path.of(configReader.getPath() + fileName + "." + fileRequestDto.getFileType());
         Files.write(filePath,fileBytes);
         file.setFilePath(filePath.toString());
         fileRepository.save(file);
