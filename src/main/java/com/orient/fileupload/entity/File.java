@@ -20,8 +20,8 @@ public class File {
     Long id;
     @Column(name = "file_key")
     String key = UUID.randomUUID().toString();
-    @Column(name = "file_path")
-    String filePath;
+    @Column(name = "file_content")
+    String fileContent;
     @Column(name = "file_type")
     String fileType;
     @Column(name = "created_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
