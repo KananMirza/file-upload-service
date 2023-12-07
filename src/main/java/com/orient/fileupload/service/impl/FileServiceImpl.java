@@ -10,10 +10,6 @@ import com.orient.fileupload.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Base64;
-
 @Service
 @RequiredArgsConstructor
 public class FileServiceImpl  implements FileService {
@@ -28,15 +24,11 @@ public class FileServiceImpl  implements FileService {
         }
         File file = new File();
         file.setFileType(fileRequestDto.getFileType());
-        byte[] fileBytes = Base64.getDecoder().decode(fileRequestDto.getFileBase64());
-        String fileName = fileRequestDto.getFileName();
-        Path filePath = Path.of(configReader.getPath() + fileName + "." + fileRequestDto.getFileType());
-        Files.write(filePath,fileBytes);
-        file.setFilePath(filePath.toString());
+        file.setFileContent(fileRequestDto.getFileBase64());
         fileRepository.save(file);
         FileResponseDto response = new FileResponseDto();
         response.setId(file.getId());
-        response.setFilePath(file.getFilePath());
+        response.setFileContent(file.getFileContent());
         response.setKey(file.getKey());
         return response;
     }
@@ -48,7 +40,7 @@ public class FileServiceImpl  implements FileService {
         }
         FileResponseDto response = new FileResponseDto();
         response.setId(file.getId());
-        response.setFilePath(file.getFilePath());
+        response.setFileContent(file.getFileContent());
         response.setKey(file.getKey());
         return response;
     }
